@@ -1145,6 +1145,98 @@ h1 em {
   background: #272018;
   color: var(--gold);
 }
+.progress-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 28px;
+}
+.progress-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 16px;
+  align-items: baseline;
+}
+.progress-list span {
+  font-family: var(--serif);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.progress-list b {
+  font-family: var(--serif);
+  color: var(--gold-bright);
+  font-variant-numeric: tabular-nums;
+}
+.progress-list i {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+      90deg,
+      transparent 0 calc(10% - 1px),
+      rgba(213, 179, 117, 0.12) calc(10% - 1px) 10%
+    ),
+    var(--surface);
+  overflow: hidden;
+}
+.progress-list i::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8a6a35, var(--gold), var(--gold-bright));
+  box-shadow: 0 0 18px rgba(240, 215, 162, 0.45);
+  transition: width 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.progress-list i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: calc(var(--value) * 1%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  background-size: 40% 100%;
+  background-repeat: no-repeat;
+  animation: progress-shine 2.8s ease-in-out infinite;
+  opacity: 0;
+}
+.progress-list li:nth-child(2) i::before {
+  transition-delay: 0.15s;
+}
+.progress-list li:nth-child(3) i::before {
+  transition-delay: 0.3s;
+}
+.progress-list li:nth-child(4) i::before {
+  transition-delay: 0.45s;
+}
+.progress-list li:nth-child(5) i::before {
+  transition-delay: 0.6s;
+}
+.progress-list li:nth-child(6) i::before {
+  transition-delay: 0.75s;
+}
+.progress-list.is-visible i::before {
+  width: calc(var(--value) * 1%);
+}
+.progress-list.is-visible i::after {
+  opacity: 1;
+}
+@keyframes progress-shine {
+  from {
+    background-position: -60% 0;
+  }
+  to {
+    background-position: 160% 0;
+  }
+}
 @media (min-width: 1600px) {
   .hero-content {
     padding-top: 100px;

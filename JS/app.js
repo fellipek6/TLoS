@@ -215,6 +215,41 @@
     trigger?.focus({ preventScroll: true });
   });
 
+  // Smooth eased scroll for in-page links.
+  let scrollFrame = 0;
+  function smoothScrollTo(target) {
+    const offset = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+    const start = window.scrollY;
+    const end = Math.max(0, target.getBoundingClientRect().top + start - offset);
+    const distance = end - start;
+    if (Math.abs(distance) < 2) {
+      window.scrollTo({ top: end, behavior: "instant" });
+      return;
+    }
+    const duration = Math.min(1400, 500 + Math.abs(distance) * 0.25);
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const startTime = performance.now();
+    cancelAnimationFrame(scrollFrame);
+    const step = (now) => {
+      const progress = Math.min(1, (now - startTime) / duration);
+      window.scrollTo({ top: start + distance * ease(progress), behavior: "instant" });
+      if (progress < 1) scrollFrame = requestAnimationFrame(step);
+    };
+    scrollFrame = requestAnimationFrame(step);
+  }
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link || link.hash.length < 2) return;
+    const target = document.getElementById(link.hash.slice(1));
+    if (!target) return;
+    event.preventDefault();
+    smoothScrollTo(target);
+    history.pushState(null, "", link.hash);
+  });
+  ["wheel", "touchstart", "keydown"].forEach((type) =>
+    window.addEventListener(type, () => cancelAnimationFrame(scrollFrame), { passive: true }),
+  );
+
   // Active navigation follows the reading position.
   const sections = $$("main > section");
   const dockLinks = $$(".dock a");
@@ -244,6 +279,18 @@
     { passive: true },
   );
   updateNavigation();
+  const progress = $("#dev-progress");
+  if (progress && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        progress.classList.add("is-visible");
+        observer.disconnect();
+      }
+    }, { threshold: 0.3 });
+    observer.observe(progress);
+  } else if (progress) {
+    progress.classList.add("is-visible");
+  }
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
     for (let i = 0; i < 16; i++) {
       const ember = document.createElement("i");
