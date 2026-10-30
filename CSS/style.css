@@ -168,6 +168,15 @@ svg {
 .button.glass:hover {
   border-color: var(--gold);
 }
+.button.icon-button,
+.hero-actions .button.icon-button {
+  width: 54px;
+  padding: 0;
+  color: var(--ink);
+}
+.button.icon-button:hover {
+  color: var(--gold-bright);
+}
 .text-button {
   display: inline-flex;
   gap: 14px;
