@@ -127,6 +127,14 @@ window.TLOS_DATA = {
   ],
   videos: [
     {
+      id: "4B8BqX7WOzY",
+      title: "Trailer",
+      label: "TRAILER",
+      category: "historia",
+      image: "hero.png",
+      description: "Trailer oficial de The Labyrinth of Six",
+    },
+    {
       id: "nyubPgYjJu0",
       title: "Uma jornada por Rellgard",
       label: "GAMEPLAY",
